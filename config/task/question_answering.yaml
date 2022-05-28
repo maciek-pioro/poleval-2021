@@ -9,7 +9,8 @@ model:
 datasets:
   - name: polish_qa
     splits:
-      train: ${gs_base_path}/data/polish_qa/dev-0-test-A-input-510.tsv
+      # train: ${gs_base_path}/data/polish_qa/dev-0-test-A-input-510.tsv
+      train: ${gs_base_path}/data/polish_qa/dev-0-input-510.tsv
   - name: trivia_qa_en
     splits:
       train: ${gs_base_path}/data/polish_qa/trivia-qa-train.tsv
