@@ -33,10 +33,10 @@ def configure_runtime(tpu_name):
     return tpu_address
 
 
-def run_training(tpu_address, config):
+def run_training(config):
     model = t5.models.MtfModel(
         model_dir=config.model_dir,
-        tpu=tpu_address,
+        # tpu=tpu_address,
         tpu_topology=TPU_TOPOLOGY,
         **config.model,
     )
@@ -74,9 +74,9 @@ def run_training(tpu_address, config):
 
 @hydra.main(config_path="config", config_name="config")
 def main(cfg: DictConfig) -> None:
-    tpu_address = configure_runtime(cfg.tpu_name)
+    # tpu_address = configure_runtime(cfg.tpu_name)
     register_datasets(cfg.datasets)
-    run_training(tpu_address, cfg)
+    run_training(cfg)
 
 
 if __name__ == "__main__":
