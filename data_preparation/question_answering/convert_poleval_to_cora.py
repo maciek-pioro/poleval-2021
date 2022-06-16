@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--output", help="Path to output file", required=False)
-    parser.add_argument("--input", help="Path to CORA file", required=True)
+    parser.add_argument("--input", help="Path to PolEval file", required=True)
 
     args = parser.parse_args()
     main(**vars(args))
