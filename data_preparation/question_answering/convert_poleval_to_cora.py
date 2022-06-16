@@ -4,7 +4,7 @@ import json
 
 def main(input, output=None):
     if output == None:
-        output = "_CORA.".join(input.split("."))
+        output = input.split(".")[0] + "_CORA.jsonl"
 
     poleval_data = pd.read_csv(input, sep="\t", header=None)
     poleval_data["id"] = poleval_data.index
