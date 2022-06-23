@@ -20,7 +20,7 @@ datasets:
         - 0.05
       - trivia_qa_en
 
-train_task: polish_qa
+train_task: pl_en_qa
 finetune_steps: 20000
 
 predict_files:

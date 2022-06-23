@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel("INFO")
 
 sentencepiece_model = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "../../sentencepiece.model")
+    os.path.join(os.path.dirname(__file__), "../../plt5_tokenizer.model")
 )
 t5_tokenizer = spm.SentencePieceProcessor(model_file=sentencepiece_model)  # type: ignore
 

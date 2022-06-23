@@ -9,13 +9,17 @@ import t5
 import seqio
 import functools as ft
 
-DEFAULT_SPM_PATH = "gs://t5-data/vocabs/mc4.250000.100extra/sentencepiece.model"
-DEFAULT_VOCAB = t5.data.SentencePieceVocabulary(DEFAULT_SPM_PATH)
 
-DEFAULT_OUTPUT_FEATURES = {
-    "inputs": t5.data.Feature(vocabulary=DEFAULT_VOCAB, add_eos=True),
-    "targets": t5.data.Feature(vocabulary=DEFAULT_VOCAB, add_eos=True),
-}
+def get_vocab(spm_path):
+    return t5.data.SentencePieceVocabulary(spm_path)
+
+
+def get_output_features(spm_path):
+    vocab = get_vocab(spm_path)
+    return {
+        "inputs": t5.data.Feature(vocabulary=vocab, add_eos=True),
+        "targets": t5.data.Feature(vocabulary=vocab, add_eos=True),
+    }
 
 
 def tsv_dataset_fn(file_paths, split, shuffle_files=False):
@@ -33,7 +37,7 @@ def tsv_dataset_fn(file_paths, split, shuffle_files=False):
     return ds
 
 
-def register_tsv_datasets(task_name, ds_paths):
+def register_tsv_datasets(task_name, ds_paths, spm_path):
     example_count = {}
     for split, path in ds_paths.items():
         with tf.io.gfile.GFile(path) as f:
@@ -51,15 +55,15 @@ def register_tsv_datasets(task_name, ds_paths):
             seqio.CacheDatasetPlaceholder(),
             seqio.preprocessors.append_eos_after_trim,
         ],
-        output_features=DEFAULT_OUTPUT_FEATURES,
+        output_features=get_output_features(spm_path),
         metric_fns=[],
     )
 
 
-def register_datasets(datasets):
+def register_datasets(datasets, spm_path):
     for dataset in datasets:
         if "splits" in dataset:
-            register_tsv_datasets(dataset.name, dataset.splits)
+            register_tsv_datasets(dataset.name, dataset.splits, spm_path)
         elif "mixture" in dataset:
             seqio.MixtureRegistry.add(dataset.name, dataset.mixture, default_rate=1.0)
         else:

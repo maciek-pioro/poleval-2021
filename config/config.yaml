@@ -3,6 +3,7 @@ defaults:
   - task: question_answering
 
 gs_base_path: '/home/m.pioro/nlp/project/poleval-2021'  # update with created bucket, eg. gs://my-bucket/my-path/
+spm_path: ???
 
 suffix: ''
 model_dir: ${gs_base_path}/${hydra:runtime.choices.task}/models_v2/${hydra:runtime.choices.model}${suffix}

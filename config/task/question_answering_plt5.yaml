@@ -1,0 +1,50 @@
+# @package __global__
+model:
+  sequence_length:
+    inputs: 512
+    targets: 32
+  save_checkpoints_steps: 5000
+  keep_checkpoint_max: 4
+
+# datasets:
+#   - name: dev_set
+#     splits:
+#       train: ${gs_base_path}/data/polish_qa/dev-0-input-510.tsv
+#   - name: test_set_a
+#     splits:
+#       train: ${gs_base_path}/data/polish_qa/test-A-input-510.tsv
+#   - name: translated_trivia
+#     splits:
+#       train: ${gs_base_path}/data/polish_qa/trivia-qa-pltrain-input-510.tsv
+#   - name: pl_qa
+#     mixture:
+#       # - - dev_set
+#         # - 0.05
+#       # - - test_set_a
+#         # - 0.05
+#       - translated_trivia
+
+datasets:
+  - name: cat
+    splits:
+      # train: ${gs_base_path}/data/polish_qa/dev-0-test-A-input-510.tsv
+      train: ${gs_base_path}/data/polish_qa/combined_pl/cat.tsv
+  - name: polish_qa
+    splits:
+      # train: ${gs_base_path}/data/polish_qa/dev-0-test-A-input-510.tsv
+      train: ${gs_base_path}/data/polish_qa/dev-0-input-510.tsv
+  - name: trivia_qa_en
+    splits:
+      train: ${gs_base_path}/data/polish_qa/trivia-qa-train.tsv
+  - name: pl_en_qa
+    mixture:
+      - - polish_qa
+        - 0.05
+      - trivia_qa_en
+
+train_task: cat
+finetune_steps: 20000
+
+predict_files:
+  # - ${gs_base_path}/data/polish_qa/test-B-questions-510.tsv
+  - ${gs_base_path}/data/polish_qa/test-A-questions-510.tsv

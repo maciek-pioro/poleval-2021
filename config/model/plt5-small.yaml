@@ -1,0 +1,12 @@
+# @package __global__
+model:
+  pytorch_model: true
+  device: 'cuda'
+  model_spec: 'allegro/plt5-small'
+  model_parallelism: 2
+  data_parallel: true
+  batch_size: 32
+  learning_rate_schedule: 0.0003
+  iterations_per_loop: 100
+
+spm_path: "../../../plt5_tokenizer.model"
