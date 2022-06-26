@@ -80,13 +80,29 @@ class DenseFlatIndexer(DenseIndexer):
         # indexing in batches is beneficial for many faiss index types
         for i in range(0, n, self.buffer_size):
             db_ids = [t[0] for t in data[i:i + self.buffer_size]]
+            # print("aaaaa")
             vectors = [np.reshape(t[1], (1, -1)) for t in data[i:i + self.buffer_size]]
+            # print("bbbb")
             vectors = np.concatenate(vectors, axis=0)
+            # print("cccc")
             self._update_id_mapping(db_ids)
+            # print("dddd")
+            # import time
+            # with open(f"/scidatalg/az406665/indexed/{time.time()}_indexed.pkl", "wb") as handle:
+            #     pickle.dump(vectors, handle)
+
             self.index.add(vectors)
+            # print("eeee")
 
         indexed_cnt = len(self.index_id_to_db_id)
+        # print("ffff")
+
         logger.info('Total data indexed %d', indexed_cnt)
+        total_memory, used_memory, free_memory = map(
+        int, os.popen('free -t -m').readlines()[-1].split()[1:])
+
+        # Memory usage
+        print("RAM memory % used:", round((used_memory / total_memory) * 100, 2))
 
     def search_knn(self, query_vectors: np.array, top_docs: int) -> List[Tuple[List[object], List[float]]]:
         scores, indexes = self.index.search(query_vectors, top_docs)

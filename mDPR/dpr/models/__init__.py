@@ -80,6 +80,7 @@ def init_comp(initializers_dict, type, args, **kwargs):
 
 
 def init_biencoder_components(encoder_type: str, args, **kwargs):
+
     return init_comp(BIENCODER_INITIALIZERS, encoder_type, args, **kwargs)
 
 

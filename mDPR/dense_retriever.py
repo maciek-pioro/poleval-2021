@@ -93,10 +93,16 @@ class DenseRetriever(object):
         for i, item in enumerate(iterate_encoded_files(vector_files)):
             db_id, doc_vector = item
             buffer.append((db_id, doc_vector))
+
+
+            # Memory usage
             if 0 < buffer_size == len(buffer):
                 self.index.index_data(buffer)
+                # Memory usage
                 buffer = []
+                # Memory usage
         self.index.index_data(buffer)
+        # Memory usage
         logger.info('Data indexing completed.')
 
     def get_top_docs(self, query_vectors: np.array, top_docs: int = 100) -> List[Tuple[List[object], List[float]]]:
@@ -251,8 +257,10 @@ def main(args):
     logger.info('Loading saved model state ...')
 
     prefix_len = len('question_model.')
+
     question_encoder_state = {key[prefix_len:]: value for (key, value) in saved_state.model_dict.items() if
                               key.startswith('question_model.')}
+
     model_to_load.load_state_dict(question_encoder_state)
     vector_size = model_to_load.get_out_size()
     logger.info('Encoder vector_size=%d', vector_size)
@@ -269,7 +277,7 @@ def main(args):
 
     # index all passages
     ctx_files_pattern = args.encoded_ctx_file
-    input_paths = glob.glob(ctx_files_pattern)
+    input_paths = glob.glob(ctx_files_pattern)[:2]
     if args.remove_lang is not None:
         final_fps = []
 
