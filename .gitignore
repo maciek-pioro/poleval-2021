@@ -1,3 +1,13 @@
 multirun/
 outputs/
 venv/
+venv copy/
+pytorch/**tfevents**
+question_answering/models_v2/
+**/*.asusgpu*
+**/*.ckpt*
+**/*.model*
+**/*.gin
+**/checkpoint
+**/*.pbtxt
+**/*.pyc
