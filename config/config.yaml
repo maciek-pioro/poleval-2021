@@ -2,7 +2,7 @@ defaults:
   - model: base
   - task: question_answering
 
-gs_base_path: '/home/m.pioro/nlp/project/poleval-2021'  # update with created bucket, eg. gs://my-bucket/my-path/
+gs_base_path: '../../..'  # update with created bucket, eg. gs://my-bucket/my-path/
 spm_path: ???
 
 suffix: ''
