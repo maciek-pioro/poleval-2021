@@ -11,3 +11,4 @@ question_answering/models_v2/
 **/checkpoint
 **/*.pbtxt
 **/*.pyc
+**/*.bin
