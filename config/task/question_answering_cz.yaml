@@ -1,0 +1,35 @@
+# @package __global__
+model:
+  sequence_length:
+    inputs: 512
+    targets: 32
+  save_checkpoints_steps: 5000
+  keep_checkpoint_max: 4
+
+datasets:
+  - name: polish_qa
+    splits:
+      train: ${gs_base_path}/data/polish_qa/test-A-input-510.tsv
+  - name: dev_set
+    splits:
+      train: ${gs_base_path}/data/polish_qa/dev-0-input-510.tsv
+  - name: trivia_qa_en
+    splits:
+      train: ${gs_base_path}/data/polish_qa/trivia-qa-train.tsv
+  - name: squad_cz
+    splits:
+      train: ${gs_base_path}/data/polish_qa/cz-squad-train-input-510.tsv
+  - name: pl_en_qa
+    mixture:
+      - - dev_set
+        - 0.05
+      - - polish_qa
+        - 0.05
+      - squad_cz
+      - trivia_qa_en
+
+train_task: pl_en_qa
+finetune_steps: 20000
+
+predict_files:
+  - ${gs_base_path}/data/polish_qa/test-B-questions-510.tsv

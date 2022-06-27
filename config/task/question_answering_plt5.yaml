@@ -46,5 +46,5 @@ train_task: cat
 finetune_steps: 20000
 
 predict_files:
-  # - ${gs_base_path}/data/polish_qa/test-B-questions-510.tsv
-  - ${gs_base_path}/data/polish_qa/test-A-questions-510.tsv
+  - ${gs_base_path}/data/polish_qa/test-B-questions-510.tsv
+  # - ${gs_base_path}/data/polish_qa/test-A-questions-510.tsv

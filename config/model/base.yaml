@@ -1,8 +1,12 @@
 # @package __global__
 model:
-  model_parallelism: 2
-  batch_size: 1
+  # model_parallelism: 1
+  mesh_shape: 'model:1,batch:2'
+  batch_size: 2
   learning_rate_schedule: 0.003
   iterations_per_loop: 100
+  mesh_devices:
+    - gpu:1
+    - gpu:2
 
 pretrained_dir: gs://t5-data/pretrained_models/mt5/base/
