@@ -1,0 +1,18 @@
+# @package __global__
+model:
+  sequence_length:
+    inputs: 512
+    targets: 32
+  save_checkpoints_steps: 5000
+  keep_checkpoint_max: 4
+
+datasets:
+  - name: cat
+    splits:
+      train: ${gs_base_path}/data/polish_qa/exp2/cat.tsv
+
+train_task: cat
+finetune_steps: 20000
+
+predict_files:
+  - ${gs_base_path}/data/polish_qa/test-B-questions-510.tsv

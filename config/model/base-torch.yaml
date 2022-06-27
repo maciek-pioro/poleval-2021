@@ -1,0 +1,12 @@
+# @package __global__
+model:
+  pytorch_model: true
+  device: 'cuda'
+  model_spec: 'google/mt5-small'
+  model_parallelism: 2
+  data_parallel: true
+  batch_size: 10
+  learning_rate_schedule: 0.0001
+  iterations_per_loop: 5000
+
+spm_path: "../../../sentencepiece.model"

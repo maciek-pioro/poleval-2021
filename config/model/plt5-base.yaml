@@ -5,7 +5,7 @@ model:
   model_spec: 'allegro/plt5-base'
   model_parallelism: 2
   data_parallel: true
-  batch_size: 2
+  batch_size: 10
   learning_rate_schedule: 0.0003
   iterations_per_loop: 100
 
