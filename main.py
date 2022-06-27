@@ -38,10 +38,14 @@ def configure_runtime(tpu_name):
 
 
 def run_tf_training(config):
+    # print(config)
+    # print(tf.config.list_physical_devices(device_type=None))
+    # exit()
     model = t5.models.MtfModel(
         model_dir=config.model_dir,
         tpu=None,
         tpu_topology=TPU_TOPOLOGY,
+        # mesh_devices=["/physical_device:GPU:0", "gpu:1"],
         **config.model,
     )
 
@@ -84,34 +88,88 @@ def run_torch_training(config):
         device=torch.device(config.model.device),
         # device=torch.device("cpu"),
     )
+    # from transformers.deepspeed import HfDeepSpeedConfig
+
+    # ds_config = {
+    #     "fp16": {
+    #         "enabled": "auto",
+    #         "loss_scale": 0,
+    #         "loss_scale_window": 1000,
+    #         "initial_scale_power": 16,
+    #         "hysteresis": 2,
+    #         "min_loss_scale": 1,
+    #     },
+    #     "optimizer": {
+    #         "type": "AdamW",
+    #         "params": {
+    #             "lr": "auto",
+    #             "betas": "auto",
+    #             "eps": "auto",
+    #             "weight_decay": "auto",
+    #         },
+    #     },
+    #     "scheduler": {
+    #         "type": "WarmupLR",
+    #         "params": {
+    #             "warmup_min_lr": "auto",
+    #             "warmup_max_lr": "auto",
+    #             "warmup_num_steps": "auto",
+    #         },
+    #     },
+    #     "zero_optimization": {
+    #         "stage": 2,
+    #         "offload_optimizer": {"device": "cpu", "pin_memory": True},
+    #         "allgather_partitions": True,
+    #         "allgather_bucket_size": 2e8,
+    #         "overlap_comm": True,
+    #         "reduce_scatter": True,
+    #         "reduce_bucket_size": 2e8,
+    #         "contiguous_gradients": True,
+    #     },
+    #     "gradient_accumulation_steps": "auto",
+    #     "gradient_clipping": "auto",
+    #     "train_batch_size": "auto",
+    #     "train_micro_batch_size_per_gpu": "auto",
+    # }  # deepspeed config object or path to the file
+    # must run before instantiating the model to detect zero 3
+    # dschf = HfDeepSpeedConfig(ds_config)
+    # engine = deepspeed.initialize(model=model._model, config_params=ds_config)
+    # print(engine)
     # print(config.model)
     # exit()
-    # if config.finetune_steps > 0:
-    #     model.train(
-    #         mixture_or_task_name=config.train_task,
-    #         steps=config.finetune_steps,
-    #         save_steps=config.model.save_checkpoints_steps,
-    #         sequence_length={
-    #             "inputs": config.model.sequence_length.inputs,
-    #             "targets": config.model.sequence_length.targets,
-    #         },
-    #         split="train",
-    #         batch_size=config.model.batch_size,
-    #         optimizer=functools.partial(
-    #             transformers.AdamW, lr=config.model.learning_rate_schedule
-    #         ),
-    #     )
+    if config.model.data_parallel:
+        print("parallelized")
+        model._model = torch.nn.parallel.DataParallel(model._model)
+    if config.finetune_steps > 0:
+        model.train(
+            mixture_or_task_name=config.train_task,
+            steps=config.finetune_steps,
+            save_steps=config.model.save_checkpoints_steps,
+            sequence_length={
+                "inputs": config.model.sequence_length.inputs,
+                "targets": config.model.sequence_length.targets,
+            },
+            split="train",
+            batch_size=config.model.batch_size,
+            optimizer=functools.partial(
+                transformers.AdamW,
+                lr=config.model.learning_rate_schedule,
+            ),
+            # optimizer=functools.partial(
+            #     transformers.Adafactor,
+            #     relative_step=False,
+            #     lr=config.model.learning_rate_schedule,
+            # ),
+        )
     model_dict = {
-        k[7:]: v
+        k: v
+        # k[7:]: v
         for k, v in torch.load(
-            "/home/m.pioro/nlp/project/poleval-2021/outputs/2022-06-23/00-29-06/pytorch/model-20000.checkpoint",
+            "/home/amysiak/nlp_project/poleval-2021/outputs/2022-06-27/13-33-16/pytorch/model-10000.checkpoint",
             # map_location=torch.device("cpu"),
         ).items()
     }
     model._model.load_state_dict(model_dict)
-    if config.model.data_parallel:
-        print("parallelized")
-        model._model = torch.nn.parallel.DataParallel(model._model)
     model._model.eval()
     for predict_file in config.predict_files:
         logger.info("Predicting file %s", predict_file)
