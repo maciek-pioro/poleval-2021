@@ -1,0 +1,1 @@
+cp hf_model.py ../venv/lib/python3.8/site-packages/t5/models/hf_model.py
