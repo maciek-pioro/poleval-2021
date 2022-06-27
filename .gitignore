@@ -12,3 +12,5 @@ question_answering/models_v2/
 **/*.pbtxt
 **/*.pyc
 **/*.bin
+!plt5_tokenizer.model
+!sentencepiece.model
